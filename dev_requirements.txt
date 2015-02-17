@@ -3,3 +3,4 @@
 
 coverage
 flake8
+proteus>=3.2,<3.3
