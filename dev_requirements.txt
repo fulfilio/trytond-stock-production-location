@@ -1,0 +1,6 @@
+# Install packages from requirements.txt
+-r requirements.txt
+
+coverage
+flake8
+proteus>=3.2,<3.3
