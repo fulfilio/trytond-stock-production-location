@@ -9,25 +9,9 @@ import doctest
 import unittest
 
 import trytond.tests.test_tryton
-from trytond import backend
-from trytond.tests.test_tryton import DB_NAME
+from trytond.tests.test_tryton import DB_NAME, doctest_setup, doctest_teardown
 
 from tests.test_views_depends import TestViewsDepends
-
-
-def doctest_dropdb(test):
-    '''
-    Remove database before testing
-    '''
-    Database = backend.get("Database")
-
-    database = Database().connect()
-    cursor = database.cursor(autocommit=True)
-    try:
-        database.drop(cursor, DB_NAME)
-        cursor.commit()
-    finally:
-        cursor.close()
 
 
 def suite():
@@ -39,15 +23,15 @@ def suite():
         unittest.TestLoader().loadTestsFromTestCase(TestViewsDepends),
     ])
     if DB_NAME == ':memory:':
-        flags = doctest.REPORT_ONLY_FIRST_FAILURE | doctest.IGNORE_EXCEPTION_DETAIL     # noqa
-        test_suite.addTests([
+        test_suite.addTests(
             doctest.DocFileSuite(
                 'scenario_stock_production_location.rst',
-                setUp=doctest_dropdb,
-                tearDown=doctest_dropdb,
+                setUp=doctest_setup,
+                tearDown=doctest_teardown,
                 encoding='utf-8',
-                optionflags=doctest.REPORT_ONLY_FIRST_FAILURE),
-        ])
+                optionflags=doctest.REPORT_ONLY_FIRST_FAILURE
+            )
+        )
     return test_suite
 
 if __name__ == '__main__':
